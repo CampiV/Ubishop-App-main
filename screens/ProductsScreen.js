@@ -8,7 +8,7 @@ const ProductsScreen = () => {
 
   // Lista de productos
   const products = [
-    { id: 1, name: 'Vicente Lueiza', price: 0.00, details: 'Detalle del producto 1', category: 'Electrónica' },
+    { id: 1, name: 'Producto 1', price: 10.00, details: 'Detalle del producto 1', category: 'Electrónica' },
     { id: 2, name: 'Producto 2', price: 15.00, details: 'Detalle del producto 2', category: 'Ropa' },
     { id: 3, name: 'Producto 3', price: 20.00, details: 'Detalle del producto 3', category: 'Electrónica' },
     { id: 4, name: 'Producto 4', price: 25.00, details: 'Detalle del producto 4', category: 'Hogar' },
