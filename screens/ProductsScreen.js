@@ -1,39 +1,46 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, FlatList, Modal } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+// Lista de productos
+const PRODUCTS = [
+  { id: '1', name: 'Producto 1', price: 20.00, details: 'Detalle del producto 1', category: 'Ropa', image: require('../assets/product1.png') },
+  { id: '2', name: 'Producto 2', price: 100.00, details: 'Detalle del producto 2', category: 'Electrónica', image: require('../assets/product2.png') },
+  { id: '3', name: 'Producto 3', price: 30.00, details: 'Detalle del producto 3', category: 'Ropa', image: require('../assets/product3.png') },
+  { id: '4', name: 'Producto 4', price: 80.00, details: 'Detalle del producto 4', category: 'Electrónica', image: require('../assets/product4.png') },
+  { id: '5', name: 'Producto 5', price: 50.00, details: 'Detalle del producto 5', category: 'Hogar', image: require('../assets/product5.png') },
+  { id: '6', name: 'Producto 6', price: 40.00, details: 'Detalle del producto 6', category: 'Hogar', image: require('../assets/product6.png') },
+];
 
 const ProductsScreen = () => {
+  const navigation = useNavigation();
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [sortByPrice, setSortByPrice] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Lista de productos
-  const products = [
-    { id: 1, name: 'Producto 1', price: 10.00, details: 'Detalle del producto 1', category: 'Electrónica' },
-    { id: 2, name: 'Producto 2', price: 15.00, details: 'Detalle del producto 2', category: 'Ropa' },
-    { id: 3, name: 'Producto 3', price: 20.00, details: 'Detalle del producto 3', category: 'Electrónica' },
-    { id: 4, name: 'Producto 4', price: 25.00, details: 'Detalle del producto 4', category: 'Hogar' },
-    { id: 5, name: 'Producto 5', price: 5.00, details: 'Detalle del producto 5', category: 'Ropa' },
-    { id: 6, name: 'Producto 6', price: 30.00, details: 'Detalle del producto 6', category: 'Hogar' },
-  ];
+  // Filtrar productos por categoría
+  const filteredProducts = PRODUCTS.filter(product => {
+    return selectedCategory === 'Todos' || product.category === selectedCategory;
+  }).sort((a, b) => sortByPrice ? a.price - b.price : 0);
 
-  // Filtrar productos por categoría y ordenar por precio si se selecciona
-  const filteredProducts = products
-    .filter(product => selectedCategory === 'Todos' || product.category === selectedCategory)
-    .sort((a, b) => sortByPrice ? a.price - b.price : 0); // Si `sortByPrice` es true, ordenar por precio.
-
+  // Renderizar cada producto
   // Renderizar cada producto en dos columnas
-  const renderProduct = ({ item }) => (
-    <TouchableOpacity style={styles.productButton}>
-      <Image source={{ uri: 'https://via.placeholder.com/100' }} style={styles.productImage} />
-      <View style={styles.textContainer}>
-        <Text style={styles.productName}>{item.name}</Text>
-        <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
-        <Text style={styles.productDetails}>{item.details}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+const renderProduct = ({ item }) => (
+  <TouchableOpacity 
+    style={styles.productButton} 
+    onPress={() => navigation.navigate('ProductDetail', { product: item })}
+  >
+    <Image source={item.image} style={styles.productImage} />
+    <View style={styles.textContainer}>
+      <Text style={styles.productName}>{item.name}</Text>
+      <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+      <Text style={styles.productDetails}>{item.details}</Text>
+    </View>
+  </TouchableOpacity>
+);
 
-  const categoryOptions = ['Todos', 'Electrónica', 'Ropa', 'Hogar'];
+
+  const categoryOptions = ['Todos', 'Ropa', 'Electrónica', 'Hogar'];
 
   return (
     <View style={styles.container}>
@@ -93,9 +100,9 @@ const ProductsScreen = () => {
       <FlatList
         data={filteredProducts}
         renderItem={renderProduct}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         numColumns={2}
-        columnWrapperStyle={styles.row} // Estilo para columnas
+        columnWrapperStyle={styles.row}
         contentContainerStyle={styles.productList}
       />
     </View>
@@ -141,7 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semi-transparente
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
     width: '80%',
@@ -189,8 +196,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     margin: 5,
-    elevation: 2, // Sombra en Android
-    shadowColor: '#000', // Sombra en iOS
+    elevation: 2,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
@@ -200,7 +207,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 10,
-    backgroundColor: '#f0f0f0', // Color de fondo para placeholder de imagen
+    backgroundColor: '#f0f0f0',
   },
   textContainer: {
     marginTop: 10,
@@ -214,13 +221,11 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 14,
     color: 'green',
-    marginTop: 5,
   },
   productDetails: {
     fontSize: 12,
-    color: 'gray',
+    color: '#888',
     marginTop: 5,
-    textAlign: 'center',
   },
 });
 

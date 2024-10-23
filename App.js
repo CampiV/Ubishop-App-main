@@ -7,6 +7,8 @@ import { createStackNavigator } from '@react-navigation/stack'; // Importar Stac
 // Importar las pantallas desde la carpeta Screens
 import HomeScreen from './screens/HomeScreen';
 import ProductsScreen from './screens/ProductsScreen';
+import ProductDetailScreen from './screens/ProductDetailScreen'; // Importar ProductDetailScreen
+import StoreScreen from './screens/StoreScreen'; // Importar StoreScreen
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen'; // Importar SignupScreen
 import SignupPersonaScreen from './screens/SignupPersonaScreen';
@@ -15,8 +17,31 @@ import SignupTiendaScreen from './screens/SignupTiendaScreen';
 // Crear Tab Navigator
 const Tab = createBottomTabNavigator();
 
-// Crear Stack Navigator para la navegación en "Mi Perfil"
+// Crear Stack Navigator para "Mi Perfil" y "Productos"
 const Stack = createStackNavigator();
+
+// Definir el Stack Navigator para la sección de productos
+function ProductsStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="ProductosMain" // Cambié el nombre a "ProductosMain" para evitar duplicados
+        component={ProductsScreen} 
+        options={{ title: 'Lista de Productos' }} // Cambié el título del encabezado
+      />
+      <Stack.Screen 
+        name="ProductDetail" // Cambié el nombre a "ProductDetail" para consistencia
+        component={ProductDetailScreen} 
+        options={{ title: 'Detalles del Producto' }} 
+      />
+      <Stack.Screen 
+        name="StoreScreen" 
+        component={StoreScreen} 
+        options={{ title: 'Tienda' }} 
+      />
+    </Stack.Navigator>
+  );
+}
 
 // Definir el Stack Navigator para "Mi Perfil"
 function ProfileStack() {
@@ -83,7 +108,8 @@ export default function App() {
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Productos" component={ProductsScreen} />
+        {/* Usar ProductsStack para incluir la navegación de productos y detalles */}
+        <Tab.Screen name="Productos" component={ProductsStack} />
         {/* Usar ProfileStack en lugar de LoginScreen directamente */}
         <Tab.Screen name="Mi Perfil" component={ProfileStack} />
       </Tab.Navigator>
